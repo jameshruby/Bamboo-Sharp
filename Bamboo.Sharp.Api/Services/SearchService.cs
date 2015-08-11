@@ -25,6 +25,18 @@ namespace Bamboo.Sharp.Api.Services
             "&includeMasterBranch={includeMasterBranch}" +
             "&searchTerm={searchTerm}";
 
+        private const string SearchProjectResource =
+          "search/projects??searchTerm={searchTerm}";
+
+        private const string SearchVersionsResource =
+          "search/versions?searchTerm={searchTerm}" +
+           "&deploymentProjectId={deploymentProjectId}" +
+            "&branchKey={branchKey}" +
+            "&chronologicalOrder={chronologicalOrder}";
+
+        private const string SearchJobsResource =
+          "search/jobs/{projectKey}?searchTerm={searchTerm}";
+
         private const string RootElement = "searchResults";
 
         //Base requests
@@ -154,6 +166,5 @@ namespace Bamboo.Sharp.Api.Services
     }
 }
 
-    
 
-   
+

@@ -30,23 +30,47 @@ namespace Bamboo.Sharp.Api.Clients
 
         private RestClient _client;
 
+        internal void Execute(IRestRequest request)
+        {
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/x-www-form-urlencoded"; };
+         
+        
+            _client = Authenticator.Authenticate();
+            _client.BaseUrl = BambooApi.BaseUrl;
+
+            var response = _client.Execute(request);
+            Console.WriteLine(response.Content);
+
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedAccessException("Unable to authenticate. Please check your credentials.");
+            }
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
+                    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
+            }
+        }
         internal T Execute<T>(IRestRequest request)
             where T : new()
         {
             _client = Authenticator.Authenticate();
             _client.BaseUrl = BambooApi.BaseUrl;
-            
+
             var response = _client.Execute<T>(request);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizedAccessException("Unable to authenticate. Please check your credentials.");
             }
+
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
+                if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
+                    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
             }
-
             return response.Data;
         }
 
@@ -54,7 +78,7 @@ namespace Bamboo.Sharp.Api.Clients
             where T : new()
         {
             var tcs = new TaskCompletionSource<T>();
-            
+
             _client = Authenticator.Authenticate();
             _client.BaseUrl = BambooApi.BaseUrl;
             _client.ExecuteAsync<T>(request, response => tcs.SetResult(response.Data));

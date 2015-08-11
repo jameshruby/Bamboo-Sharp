@@ -8,8 +8,7 @@ namespace Bamboo.Sharp.Api
     {
         internal static string BaseUrl { get; set; }
 
-        public T GetService<T>()
-            where T : IService, new()
+        public T GetService<T>()  where T : IService, new()
         {
             return ServiceFactory.GetService<T>();
         }

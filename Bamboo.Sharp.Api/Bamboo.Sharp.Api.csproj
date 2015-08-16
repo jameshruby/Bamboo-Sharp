@@ -55,6 +55,7 @@
     <Compile Include="Deserializers\ProjectsDeserializer.cs" />
     <Compile Include="Exceptions\InternalServerError.cs" />
     <Compile Include="Model\Author.cs" />
+    <Compile Include="Model\Artifacts.cs" />
     <Compile Include="Model\Labels.cs" />
     <Compile Include="Model\QueueObject.cs" />
     <Compile Include="Model\Variable.cs" />

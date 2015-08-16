@@ -21,6 +21,19 @@ namespace Bamboo.Sharp.Api.Services
             Client.Execute(request);
         }
 
+
+        public Plan GetPlan_expanded(string projectKey, string buildKey)
+        {
+            //RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=stages.stage.plans.plan.actions", Method = Method.GET };
+
+            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=plans.pla&expand=variableContext&expand=stages.stage.plans.plan.actions", Method = Method.GET };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+
+            //Client.Execute(request);
+            return Client.Execute<Plan>(request);
+        }
+
         public Plan GetPlan(string projectKey, string buildKey)
         {
             //RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=stages.stage.plans.plan.actions", Method = Method.GET };
@@ -204,13 +217,14 @@ namespace Bamboo.Sharp.Api.Services
             var r = Client.Execute<Plan>(request);
         }
 
-        public Plan GetPlanArtefact(string projectKey, string buildKey)
+        public ArtifactsBase ArtifactsGet(string projectKey, string buildKey)
         {
-            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/artifact ", Method = Method.GET };
+            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/artifact?expand=artifacts", Method = Method.GET };
             request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
-            return Client.Execute<Plan>(request);
+            return Client.Execute<ArtifactsBase>(request);
         }
+
         public Plan AddPlanToQuarantine(string projectKey, string buildKey, string testId) //?? dont understand what this request doing
         {
             RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/test/{testId}/quarantine ", Method = Method.POST };

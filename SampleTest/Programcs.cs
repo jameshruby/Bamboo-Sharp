@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace SampleTest
 {
     class Program
     {
@@ -25,7 +25,9 @@ namespace Test
             const string password = "";
             #endregion
             BambooApi api = new BambooApi(apiBaseUrl, userName, password);
-          
+            new PlanSample(api, "JHT", "AIRI");
+
+            
             wa = new WebApi(userName, password);
             wa.SimpleHttp.Verbose = true;
         
@@ -35,8 +37,7 @@ namespace Test
             queueService = api.GetService<QueueService>();
         
 
-            //var plans = planService.GetPlan("AIIIDATA", "STRUCDEX");
-
+        
             //projectsService.Clone("JHT", "AH", "JHT", "AIR11");
             ////projectsService.TestChangeConfig();
 
@@ -45,35 +46,37 @@ namespace Test
             var templatebuildKey = "TEM";
 
 
-            var tetest = projectsService.GetProjectWithAllPlans(templateProjKey);
-            foreach (var plan in tetest.Plans.All)
-            {
-                if (plan.ShortKey == "RRRDEN")
-                {
-                    //wa.ShareAllArtifactsToAnotherJob(plan.ProjectKey, plan.ShortKey, "JOB1", "RRRR");
-                    //wa.DeleteStage(plan.ProjectKey, plan.ShortKey, "GetSvnConfiguration");
-                    wa.AddPlanVariable(plan.ProjectKey, plan.ShortKey, "aaaa", "cc");
-                }
-            }
+            //var tetest = projectsService.GetProjectWithAllPlans(templateProjKey);
+            //foreach (var plan in tetest.Plans.All)
+            //{
+            //    if (plan.ShortKey == "RRRDEN")
+            //    {
+            //        //wa.ShareAllArtifactsToAnotherJob(plan.ProjectKey, plan.ShortKey, "JOB1", "RRRR");
+            //        //wa.DeleteStage(plan.ProjectKey, plan.ShortKey, "GetSvnConfiguration");
+            //        wa.AddPlanVariable(plan.ProjectKey, plan.ShortKey, "aaaa", "cc");
+            //    }
+            //}
 
-            var arma3DataPlansWitVars = projectsService.GetProjectWithAllPlansAndVariables(templateProjKey);
-            foreach (var plan in arma3DataPlansWitVars.Plans.All)
-            {
-                if (plan.ShortName.ToLower().Contains("exp"))
-                {
+            //var arma3DataPlansWitVars = projectsService.GetProjectWithAllPlansAndVariables(templateProjKey);
+            //foreach (var plan in arma3DataPlansWitVars.Plans.All)
+            //{
+            //    if (plan.ShortName.ToLower().Contains("exp"))
+            //    {
 
-                    var currentPlan = planService.GetPlan(projKey, plan.ShortKey);
-                    foreach (var variable in currentPlan.VariableContext.All)
-                    {
-                        if (variable.Key == "a3_useOldBuildingPipeline" && variable.Value == "true")
-                        {
-                            Console.WriteLine(plan.ShortName + Environment.NewLine);
-                        }
-                    }
-                }
-            }
+            //        var currentPlan = planService.GetPlan(projKey, plan.ShortKey);
+            //        foreach (var variable in currentPlan.VariableContext.All)
+            //        {
+            //            if (variable.Key == "a3_useOldBuildingPipeline" && variable.Value == "true")
+            //            {
+            //                Console.WriteLine(plan.ShortName + Environment.NewLine);
+            //            }
+            //        }
+            //    }
+            //}
+            wa.ClonePlan("JHT", templatebuildKey, "JHT", "LALALA");
 
-            var arma3DataPlans = projectsService.GetProjectWithAllPlans(projKey);
+
+            var arma3DataPlans = projectsService.GetProjectWithAllPlans(templateProjKey);
             var buildingPlans = new List<Bamboo.Sharp.Api.Model.Plan>();
             var processed = true;
 
@@ -81,12 +84,6 @@ namespace Test
             {
                 var buildKey = plan.ShortKey;
                 Console.WriteLine(plan.ProjectKey + " " + plan.ShortKey + " " + plan.ShortName);
-
-                foreach (var item in plan.VariableContext.All)
-                {
-                    Console.WriteLine("{0} {1}", item.Key, item.Value);
-                }
-
 
                 if (plan.ShortKey == "RNDROOT")
                 {
@@ -106,8 +103,8 @@ namespace Test
                 else if (plan.ShortKey == "STRUCEX")// if (plan.BuildName.ToLower().Contains("exp"))
                 {
 
-                    //DeletePlan(plan.ProjectKey, plan.ShortKey);
-                    //ClonePlan("AIIIDATA", plan.ShortKey, plan.ProjectKey, plan.ShortKey);
+                    //wa.DeletePlan(plan.ProjectKey, plan.ShortKey);
+                    wa.ClonePlan("JHT", templatebuildKey, plan.ProjectKey, plan.ShortKey);
 
 
                     //DeleteStage(plan.ProjectKey, buildKey, "Build package");
@@ -138,15 +135,6 @@ namespace Test
             */
 
             //api.GetService<QueueService>().Show();
-
-            //planService.RemovePlanFromFavourites("JHT", "AIR");
-
-
-
-
-            //planService.LabelAdd("JHT", "AIR");
-            //var label = planService.LabelGet("JHT", "AIR");
-
 
             //var projectsService = api.GetService<ProjectService>();
             //var projects = projectsService.GetProjects();

@@ -12,8 +12,9 @@ namespace SampleTest
         public PlanSample(Bamboo.Sharp.Api.BambooApi api, string projectKey, string buildKey)
         {
             var planService = api.GetService<PlanService>();
-            var artifacts = planService.ArtifactsGet(projectKey, buildKey);
 
+            #region Artifacts
+            var artifacts = planService.ArtifactsGet(projectKey, buildKey);
             foreach (var artifact in artifacts.artifacts.All)
             {
                 Console.WriteLine();
@@ -23,6 +24,29 @@ namespace SampleTest
                 Console.WriteLine("Artifact Shared: {0}", artifact.shared);
                 Console.WriteLine("Artifact CopyPattern: {0}", artifact.copyPattern);
             }
+
+            #endregion
+
+            #region Favourites
+            var planExpanded = planService.GetPlanSimple(projectKey, buildKey);
+            if (planExpanded.IsFavourite)
+                planService.FavouritesRemove(projectKey, buildKey);
+            else
+                planService.FavouritesAdd(projectKey, buildKey);
+            #endregion
+
+            #region Branches
+            var branchName = "ILoveTheMonkeyHead";
+            var newBranch = planService.BranchSet(projectKey, buildKey, branchName);
+            var selectedBranches = planService.BranchGet(projectKey, buildKey, branchName);
+
+            Console.WriteLine("Branch Name: {0}", selectedBranches.Name);
+            Console.WriteLine("Branch ShortKey: {0}", selectedBranches.ShortKey);
+            Console.WriteLine("Branch ShortName: {0}", selectedBranches.ShortName);
+            Console.WriteLine("Branch Key: {0}", selectedBranches.Key);
+            Console.WriteLine("Branch Enabled: {0}", selectedBranches.Enabled);
+
+            #endregion
         }
     }
 }

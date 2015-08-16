@@ -1,4 +1,6 @@
-﻿namespace Bamboo.Sharp.Api.Model
+﻿using RestSharp.Deserializers;
+
+namespace Bamboo.Sharp.Api.Model
 {
     public class Plan : BaseNode
     {
@@ -18,7 +20,7 @@
 
         public string Type { get; set; }
 
-        public string Enabled { get; set; }
+        public bool Enabled { get; set; }
 
         public Link Link { get; set; }
 
@@ -34,7 +36,7 @@
 
         public Stages Stages { get; set; }
 
-        public Branches Branches { get; set; }
+        public Branch Branches { get; set; }
 
         public VariableContext VariableContext { get; set; }
 

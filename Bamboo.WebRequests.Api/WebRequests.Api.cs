@@ -89,6 +89,35 @@ namespace Bamboo.WebRequests.Api
             simpleHttp.ExecutePostRequest(request, postParams).GetAwaiter().GetResult();
         }
 
+        public void SetPlanVariable(string projectKey, string buildKey, string variableName, string variableValue)
+        {
+            string requestR = String.Format("https://bamboo.bistudio.com/chain/admin/config/configureChainVariables.action?buildKey={0}-{1}", projectKey, buildKey);
+            var stagesWebPage = simpleHttp.ExecuteGetRequest(requestR).GetAwaiter().GetResult();
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(stagesWebPage);
+
+            var elementName = "key_";
+            try
+            {
+                var selectedVariable = htmlDoc.DocumentNode.Descendants("span")
+                                                .SingleOrDefault(element => element.Id.Contains(elementName) &&
+                                                                 element.InnerText == variableName
+                                                                ).Id.Trim(elementName.ToCharArray());
+        
+
+            int variableId = Int32.Parse(selectedVariable);
+            string request = String.Format("https://bamboo.bistudio.com/build/admin/ajax/updatePlanVariable.action?planKey={0}-{1}", projectKey, buildKey);
+            string postParams = string.Format("variableId={0}&variableKey={1}&variableValue={2}&bamboo.successReturnMode=json&decorator=nothing&confirm=true&atl_token=" + atl_token, variableId, variableName, variableValue);
+            simpleHttp.ExecutePostRequest(request, postParams).GetAwaiter().GetResult();
+
+            }
+
+            catch (Exception ex)
+            {
+                //FIX  - SWALLOW FOR NOW - caller should check if variable exists via bamboo sharp, when mass-change, exception would halt all batch
+            }
+        }
+
         public void ShareAllArtifactsToAnotherJob(string projKey, string buildKey, string jobKey, string anotherJobKey)
         {
             string requestR = String.Format("https://bamboo.bistudio.com/build/admin/edit/defaultBuildArtifact.action?buildKey={0}-{1}-{2}", projKey, buildKey, jobKey);
@@ -146,7 +175,6 @@ namespace Bamboo.WebRequests.Api
             simpleHttp.ExecutePostRequest(request, postParams).GetAwaiter().GetResult();
         }
 
-     
         public void JobCleanWorkingDirectory(string projKey, string buildKey, string jobKey)
         {
             string request = @"https://bamboo.bistudio.com/build/admin/edit/updateMiscellaneous.action";

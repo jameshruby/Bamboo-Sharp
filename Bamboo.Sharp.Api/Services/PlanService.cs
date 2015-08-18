@@ -15,12 +15,12 @@ namespace Bamboo.Sharp.Api.Services
             RestRequest request = new RestRequest { Resource = "plan", RootElement = "plan", Method = Method.GET };
             return Client.Execute<Plan>(request);
         }
+
         public void GetPlansT()
         {
             RestRequest request = new RestRequest { Resource = "plan", RootElement = "plan", Method = Method.GET };
             Client.Execute(request);
         }
-
 
         public Plan GetPlan_expanded(string projectKey, string buildKey)
         {
@@ -249,24 +249,31 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<ArtifactsBase>(request);
         }
 
-        public Plan AddPlanToQuarantine(string projectKey, string buildKey, string testId) //?? dont understand what this request doing
+        public Plan QuarantineAdd(string projectKey, string buildKey, string testId)
         {
-            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/test/{testId}/quarantine ", Method = Method.POST };
+            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/test/{testId}/quarantine", Method = Method.POST };
             request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+            request.AddParameter("testId", testId, ParameterType.UrlSegment);
+            Client.Execute(request);
             return Client.Execute<Plan>(request);
         }
 
-        public Plan PlanUnleash(string projectKey, string buildKey, string testId) //?? dont understand what this request doing
+        public Plan QuarantineUnleash(string projectKey, string buildKey, string testId) 
         {
-            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/test/{testId}/unleash ", Method = Method.POST };
+            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}/test/{testId}/unleash", Method = Method.POST };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+            request.AddParameter("testId", testId, ParameterType.UrlSegment);
             return Client.Execute<Plan>(request);
         }
 
-        public Plan GetPlanFavicon(string planKey) //?? dont understand what this request doing
+        public FavIcon GetPlanStatusIcon(string projectKey, string buildKey)
         {
-            RestRequest request = new RestRequest { Resource = "plan/favicon/{planKey} ", Method = Method.GET };
-            return Client.Execute<Plan>(request);
+            RestRequest request = new RestRequest { Resource = "plan/favicon/{projectKey}-{buildKey}", Method = Method.GET };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+            return Client.Execute<FavIcon>(request);
         }
 
     }

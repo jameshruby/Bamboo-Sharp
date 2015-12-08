@@ -111,10 +111,10 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<object>(request);
         }
 
-        public object GetDashboard()
+        public void GetDashboard()
         {
             RestRequest request = new RestRequest { Resource = "deploy/dashboard ", Method = Method.GET };
-            return Client.Execute<object>(request);
+            Client.Execute(request);
         }
         public object GetEnvironment(int environmentId)
         {

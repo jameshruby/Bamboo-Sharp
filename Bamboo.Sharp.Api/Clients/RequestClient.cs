@@ -17,6 +17,8 @@ namespace Bamboo.Sharp.Api.Clients
         {
         }
 
+        public bool Verbose { get { return false; } }
+
         internal static RequestClient Instance
         {
             get
@@ -33,14 +35,17 @@ namespace Bamboo.Sharp.Api.Clients
         internal void Execute(IRestRequest request)
         {
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/x-www-form-urlencoded"; };
-         
-        
+
+
             _client = Authenticator.Authenticate();
             _client.BaseUrl = BambooApi.BaseUrl;
 
             var response = _client.Execute(request);
-            Console.WriteLine(response.Content);
 
+            if (Verbose)
+            {
+                Console.WriteLine(response.Content);
+            }
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
@@ -49,8 +54,8 @@ namespace Bamboo.Sharp.Api.Clients
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
-                    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
+                //if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
+                //    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
             }
         }
         internal T Execute<T>(IRestRequest request)
@@ -61,6 +66,11 @@ namespace Bamboo.Sharp.Api.Clients
 
             var response = _client.Execute<T>(request);
 
+            if (Verbose)
+            {
+                Console.WriteLine(response.Content + Environment.NewLine);
+            }
+
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizedAccessException("Unable to authenticate. Please check your credentials.");
@@ -68,8 +78,9 @@ namespace Bamboo.Sharp.Api.Clients
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
-                    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
+                //for DELETE/POST bamboo sometimes process the request, but not return a response, which is concidered as OK
+                //if (!((request.Method == Method.DELETE || request.Method == Method.POST) && response.StatusCode == HttpStatusCode.NoContent))
+                //    throw new InternalServerError(ExceptionDeserializer.Deserialize(response.Content));
             }
             return response.Data;
         }

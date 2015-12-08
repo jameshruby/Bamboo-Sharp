@@ -54,11 +54,15 @@
     <Compile Include="Deserializers\IDeserialize.cs" />
     <Compile Include="Deserializers\ProjectsDeserializer.cs" />
     <Compile Include="Exceptions\InternalServerError.cs" />
+    <Compile Include="Model\Comments.cs" />
+    <Compile Include="Model\JiraIssues.cs" />
+    <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Artifacts.cs" />
     <Compile Include="Model\FavIcon.cs" />
     <Compile Include="Model\Labels.cs" />
     <Compile Include="Model\QueueObject.cs" />
+    <Compile Include="Model\Result_2.cs" />
     <Compile Include="Model\Variable.cs" />
     <Compile Include="Model\VariableContext.cs" />
     <Compile Include="Model\Stage.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="Services\DeployService.cs" />
     <Compile Include="Services\ElasticConfiguration.cs" />
     <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\ResultService.cs" />
     <Compile Include="Services\PlanService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Exceptions\RequestException.cs" />

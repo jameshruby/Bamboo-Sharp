@@ -17,6 +17,7 @@ namespace Bamboo.Sharp.Api.Services
             //Client.Execute(request);
             var r = Client.Execute<RootObject>(request);
         }
+        
         public void Add(string projKey, string buildKey)
         {
             RestRequest request = new RestRequest
@@ -30,7 +31,7 @@ namespace Bamboo.Sharp.Api.Services
             Client.Execute<object>(request);
         }
 
-        public void Add(string projKey, string buildKey, int buildNumber) //build number should be maybe uint since its allways > 0 ?
+        public void Add(string projKey, string buildKey, int buildNumber)
         {
             RestRequest request = new RestRequest { Resource = "queue/{projectKey}-{buildKey}-{buildNumber : ([0-9]+)} ", Method = Method.PUT };
 
@@ -40,6 +41,7 @@ namespace Bamboo.Sharp.Api.Services
 
             var r = Client.Execute<object>(request);
         }
+       
         public void Add(string projKey, string buildKey, string stageName)
         {
             RestRequest request = new RestRequest { Resource = "queue/{projectKey}-{buildKey}?stage={stageName}?executeAllStages=false", Method = Method.POST };
@@ -51,7 +53,7 @@ namespace Bamboo.Sharp.Api.Services
             var r = Client.Execute<object>(request);
         }
 
-        public void Remove(string projKey, string buildKey, int buildNumber) //build number should be maybe uint since its allways > 0 ?
+        public void Remove(string projKey, string buildKey, int buildNumber)
         {
             RestRequest request = new RestRequest { Resource = "queue/{projectKey}-{buildKey}-{buildNumber}", Method = Method.DELETE };
 

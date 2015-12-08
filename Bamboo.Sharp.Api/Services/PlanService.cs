@@ -16,21 +16,12 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<Plan>(request);
         }
 
-        public void GetPlansT()
-        {
-            RestRequest request = new RestRequest { Resource = "plan", RootElement = "plan", Method = Method.GET };
-            Client.Execute(request);
-        }
-
         public Plan GetPlan_expanded(string projectKey, string buildKey)
         {
-            //RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=stages.stage.plans.plan.actions", Method = Method.GET };
-
-            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=plans.pla&expand=variableContext&expand=stages.stage.plans.plan.actions", Method = Method.GET };
+            RestRequest request = new RestRequest { Resource = "plan/{projectKey}-{buildKey}?expand=plans.plan&expand=variableContext&expand=stages.stage.plans.plan.actions&expand=branches&expand=actions", Method = Method.GET };
             request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
 
-            //Client.Execute(request);
             return Client.Execute<Plan>(request);
         }
 
@@ -123,7 +114,7 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<Branch>(request);
         }
 
-        public Branch BranchSet(string projectKey, string buildKey, string branchName)
+        public void BranchSet(string projectKey, string buildKey, string branchName)
         {
 
             RestRequest request = new RestRequest
@@ -135,7 +126,14 @@ namespace Bamboo.Sharp.Api.Services
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
             request.AddParameter("branchName", branchName, ParameterType.UrlSegment);
 
-            return Client.Execute<Branch>(request);
+            try
+            {
+                Client.Execute<Branch>(request);
+            }
+            catch (Exception ex)
+            {
+        
+            }
         }
 
         public object LabelAdd(string projectKey, string buildKey, string labelValue)
@@ -274,6 +272,14 @@ namespace Bamboo.Sharp.Api.Services
             request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
             return Client.Execute<FavIcon>(request);
+        }
+
+        public void TestTest()
+        {
+            RestRequest request = new RestRequest { Resource = "/trade-depot/1.0/project/JHT", Method = Method.GET };
+            //request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            //request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+            Client.Execute(request);
         }
 
     }

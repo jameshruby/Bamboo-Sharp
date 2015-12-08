@@ -14,36 +14,62 @@ namespace SampleTest
         private static PlanService planService;
         private static QueueService queueService;
         private static WebApi wa;
+        
+        private static void PlanUpdate(Bamboo.Sharp.Api.Model.Plan plan)
+        {
+            Console.WriteLine(plan.Name);
+            //var templateProjKey = "JHT";
+            //var projKey = "AIIIDATA";
+            //var templatebuildKey = "EDEN"; //TEM
 
-        static void Main(string[] args)
+            //var r = planService.GetPlan_expanded(plan.ProjectKey, plan.ShortKey);
+            //if (plan.ShortKey != "MODEP" && plan.ShortKey != "LANB" && plan.ShortKey != "MISFDDD" && plan.ShortKey != "DDENDT")
+            //{
+            //wa.DeleteJob(plan.ProjectKey, plan.ShortKey, "JOB1");
+            //planService.BranchSet(plan.ProjectKey, plan.ShortKey, "A3-VisualUpdate");
+
+            //wa.OverrideNthBranchRepository(plan.ProjectKey, plan.ShortKey, 0);
+            //wa.AddPlanVariable(plan.ProjectKey, plan.ShortKey, "useBranch");
+
+            //wa.AddPlanVariable(plan.ProjectKey, plan.ShortKey, "useBranch", 0);
+
+            //wa.CloneJob("JHT", "ARMORF", "JOB1", "Build+package", plan.ProjectKey, plan.ShortKey, "Build package");
+            //}
+        }
+            static void Main(string[] args)
         {
             //Console.WriteLine("Processing...");
 
             const string apiBaseUrl = @"https://bamboo.bistudio.com/rest/api/latest/";
             #region MyRegion
-            const string userName = "";
-            const string password = "";
+            const string userName = "hrubyjak";
+            const string password = "bi4T$gr";
             #endregion
             BambooApi api = new BambooApi(apiBaseUrl, userName, password);
-            new PlanSample(api, "JHT", "AIRI");
 
-            
-            wa = new WebApi(userName, password);
-            wa.SimpleHttp.Verbose = true;
-        
+            //var resultService = new ResultService();
+
+            //var r = resultService.GetResultNumber("JHT", 10);
+            //r.All.OrderByDescending(c => c.BuildCompletedDate.Date)
+            // .ThenBy(c => c.BuildCompletedDate.TimeOfDay);
+
+            //wa = new WebApi(userName, password);
+            //wa.SimpleHttp.Verbose = true;
+
             var projectsService = api.GetService<ProjectService>();
+            
+            //planService = api.GetService<PlanService>();
 
-            planService = api.GetService<PlanService>();
-            queueService = api.GetService<QueueService>();
-        
+            var arma3DataPlans = projectsService.GetProjectWithAllPlans("JHT");
 
-        
+            //planService.GetPlan_expanded("AIIIDATA", "ARMORF");
+            //queueService = api.GetService<QueueService>();
             //projectsService.Clone("JHT", "AH", "JHT", "AIR11");
             ////projectsService.TestChangeConfig();
 
             var templateProjKey = "JHT";
             var projKey = "AIIIDATA";
-            var templatebuildKey = "TEM";
+            var templatebuildKey = "EDEN"; //TEM
 
 
             //var tetest = projectsService.GetProjectWithAllPlans(templateProjKey);
@@ -64,68 +90,72 @@ namespace SampleTest
             //    {
 
             //        var currentPlan = planService.GetPlan(projKey, plan.ShortKey);
-            //        foreach (var variable in currentPlan.VariableContext.All)
+            //        foreach (var planVar in currentPlan.VariableContext.All)
             //        {
-            //            if (variable.Key == "a3_useOldBuildingPipeline" && variable.Value == "true")
+            //            if (planVar.Key == "a3_useOldBuildingPipeline" && planVar.Value == "true")
             //            {
             //                Console.WriteLine(plan.ShortName + Environment.NewLine);
             //            }
             //        }
             //    }
             //}
-            wa.ClonePlan("JHT", templatebuildKey, "JHT", "LALALA");
 
 
-            var arma3DataPlans = projectsService.GetProjectWithAllPlans(templateProjKey);
-            var buildingPlans = new List<Bamboo.Sharp.Api.Model.Plan>();
-            var processed = true;
+            //var arma3DataPlans = projectsService.GetProjectWithAllPlans(projKey);
+            //var buildingPlans = new List<Bamboo.Sharp.Api.Model.Plan>();
+            //var processed = true;
 
-            foreach (var plan in arma3DataPlans.Plans.All)
-            {
-                var buildKey = plan.ShortKey;
-                Console.WriteLine(plan.ProjectKey + " " + plan.ShortKey + " " + plan.ShortName);
+            //arma3DataPlans.Plans.All.ForEach(p => PlanUpdate(p));
 
-                if (plan.ShortKey == "RNDROOT")
-                {
+            //foreach (var plan in arma3DataPlans.Plans.All)
+            //{
+            //    var buildKey = plan.ShortKey;
+            //    if (plan.ShortKey == "MISDF")
+            //    {
+            //        processed = false;
+            //    }
+            //    //else if (plan.ShortKey == "MAPSDT")
+            //    //{
+            //    //    processed = false;
+            //    //}
+            //    else if (plan.IsBuilding)
+            //    {
+            //        buildingPlans.Add(plan);
+            //    }
 
-                }
-                //else if (plan.ShortKey == "MAPSDT")
-                //{
-                //    processed = false;
-                //}
-                else if (plan.IsBuilding)
-                {
-                    //buildingPlans.Add(plan);
-                }
+            //    //STRUCTURES_F_EXP || MAP_TANOABUKA
 
-                    //STRUCTURES_F_EXP || MAP_TANOABUKA
+            //    else if (!processed)
+            //    {
+            //        //Console.WriteLine(plan.ProjectKey + " " + plan.ShortKey + " " + plan.ShortName);
 
-                else if (plan.ShortKey == "STRUCEX")// if (plan.BuildName.ToLower().Contains("exp"))
-                {
+            //        //wa.DeleteTask
 
-                    //wa.DeletePlan(plan.ProjectKey, plan.ShortKey);
-                    wa.ClonePlan("JHT", templatebuildKey, plan.ProjectKey, plan.ShortKey);
+            //        //wa.DeleteJob(plan.ProjectKey, buildKey, "JOB1");
+            //        //wa.DeleteStage(plan.ProjectKey, buildKey, "Copy data and packlogs");
 
+            //        //wa.CloneJob(templateProjKey, templatebuildKey, "JOB1", "Build+package", plan.ProjectKey, buildKey, "Build package");
 
-                    //DeleteStage(plan.ProjectKey, buildKey, "Build package");
-                    //CreateStage(plan.ProjectKey, plan.ShortKey, "Build+package");
-                    //CreateStage(plan.ProjectKey, plan.ShortKey, "Synchronize+data");
+            //        //wa.ShareAllArtifactsToAnotherJob(plan.ProjectKey, buildKey, "JOB1", "RRRR");
+
+            //        //wa.DeletePlan(plan.ProjectKey, plan.ShortKey);
+            //        //wa.ClonePlan("JHT", templatebuildKey, plan.ProjectKey, plan.ShortKey);
 
 
-                    //wa.JobCleanWorkingDirectory(plan.ProjectKey, buildKey, "JOB1");
-                    //wa.DeleteJob(plan.ProjectKey, buildKey, "DTF");
+            //        //DeleteStage(plan.ProjectKey, buildKey, "Build package");
+            //        //CreateStage(plan.ProjectKey, plan.ShortKey, "Build+package");
+            //        //CreateStage(plan.ProjectKey, plan.ShortKey, "Synchronize+data");
 
-                    //CloneJob(templateProjKey, templatebuildKey, "JOB1", "Build+Package", plan.ProjectKey, buildKey, "Build+package");
 
-                    //CloneJob(templateProjKey, templatebuildKey, "RRRR", "Copy+data+and+packlogs", plan.ProjectKey, buildKey, "Synchronize+data");
-                    //CloneJob(templateProjKey, templatebuildKey, "DTF", "Delete+temp+files", plan.ProjectKey, buildKey, "Synchronize+data");
+            //        //wa.JobCleanWorkingDirectory(plan.ProjectKey, buildKey, "JOB1");
 
-                    //ShareAllArtifactsToAnotherJob(plan.ProjectKey, buildKey, "JOB1", "RRRR");
-                    //AddPlanVariable(plan.ProjectKey, buildKey, "a3_useOldBuildingPipeline", "false");
-                    //AddPlanVariable(plan.ProjectKey, buildKey, "svnSubdirectory");
 
-                }
-            }
+            //        //CloneJob(templateProjKey, templatebuildKey, "RRRR", "Copy+data+and+packlogs", plan.ProjectKey, buildKey, "Synchronize+data");
+            //        //CloneJob(templateProjKey, templatebuildKey, "DTF", "Delete+temp+files", plan.ProjectKey, buildKey, "Synchronize+data");
+
+            //        //AddPlanVariable(plan.ProjectKey, buildKey, "svnSubdirectory");
+            //    }
+            //}
 
 
             /*

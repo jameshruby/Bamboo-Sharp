@@ -13,6 +13,17 @@ namespace SampleTest
         {
             var planService = api.GetService<PlanService>();
 
+            var pland = planService.GetPlan_expanded(projectKey, buildKey);
+            //foreach (var planVar in pland.VariableContext.All)
+            //{
+            //     Console.WriteLine("{0} = {1}",planVar.Key, planVar.Value);  
+            //}
+
+            //var r = planService.GetPlanStatusIcon(projectKey, buildKey);
+
+            //planService.QuarantineAdd("AIIIDATA", "A3BI", "647");
+            //planService.QuarantineUnleash(projectKey, "A3BI", "647");
+
             #region Artifacts
             var artifacts = planService.ArtifactsGet(projectKey, buildKey);
             foreach (var artifact in artifacts.artifacts.All)
@@ -36,16 +47,15 @@ namespace SampleTest
             #endregion
 
             #region Branches
-            var branchName = "ILoveTheMonkeyHead";
-            var newBranch = planService.BranchSet(projectKey, buildKey, branchName);
-            var selectedBranches = planService.BranchGet(projectKey, buildKey, branchName);
+            //var branchName = "ILoveTheMonkeyHead";
+            //var newBranch = planService.BranchSet(projectKey, buildKey, branchName);
+            //var selectedBranches = planService.BranchGet(projectKey, buildKey, branchName);
 
-            Console.WriteLine("Branch Name: {0}", selectedBranches.Name);
-            Console.WriteLine("Branch ShortKey: {0}", selectedBranches.ShortKey);
-            Console.WriteLine("Branch ShortName: {0}", selectedBranches.ShortName);
-            Console.WriteLine("Branch Key: {0}", selectedBranches.Key);
-            Console.WriteLine("Branch Enabled: {0}", selectedBranches.Enabled);
-
+            //Console.WriteLine("Branch Name: {0}", selectedBranches.Name);
+            //Console.WriteLine("Branch ShortKey: {0}", selectedBranches.ShortKey);
+            //Console.WriteLine("Branch ShortName: {0}", selectedBranches.ShortName);
+            //Console.WriteLine("Branch Key: {0}", selectedBranches.Key);
+            //Console.WriteLine("Branch Enabled: {0}", selectedBranches.Enabled);
             #endregion
         }
     }

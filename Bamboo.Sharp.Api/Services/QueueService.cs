@@ -8,14 +8,23 @@ using System.Threading.Tasks;
 
 namespace Bamboo.Sharp.Api.Services
 {
-   public class QueueService : BaseService
+    public class QueueService : BaseService
     {
-        public void Show()
+        public Queued Show()
         {
-            RestRequest request = new RestRequest { Resource = "queue?expand=queuedBuilds.queuedBuild", Method = Method.GET };
+            RestRequest request = new RestRequest { Resource = "queue?expand=queuedBuilds", Method = Method.GET };//.queuedBuild
+            return Client.Execute<Queued>(request);
+        }
 
-            //Client.Execute(request);
-            var r = Client.Execute<RootObject>(request);
+        public void Add(string projKeybuildKey)
+        {
+            RestRequest request = new RestRequest
+            {
+                Resource = "queue/{projectKeybuildKey}",
+                Method = Method.POST
+            };
+            request.AddParameter("projKeybuildKey", projKeybuildKey, ParameterType.UrlSegment);
+            Client.Execute<object>(request);
         }
         
         public void Add(string projKey, string buildKey)
@@ -61,6 +70,14 @@ namespace Bamboo.Sharp.Api.Services
             request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
             request.AddParameter("buildNumber", buildNumber, ParameterType.UrlSegment);
 
+            var r = Client.Execute<object>(request);
+        }
+
+        public void Remove(string projKeybuildKeyJob)
+        {
+            RestRequest request = new RestRequest { Resource = "queue/{projKeybuildKeyJob}?&executeAllStages=true", Method = Method.DELETE };
+
+            request.AddParameter("projKeybuildKeyJob", projKeybuildKeyJob, ParameterType.UrlSegment);
             var r = Client.Execute<object>(request);
         }
     }

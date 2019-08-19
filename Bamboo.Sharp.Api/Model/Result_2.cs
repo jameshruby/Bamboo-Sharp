@@ -13,6 +13,20 @@ namespace Bamboo.Sharp.Api.Model
         Unknown,
     }
 
+    public class Progress
+    {
+        public bool IsValid { get; set; }
+        public bool IsUnderAverageTime { get; set; }
+        public float PercentageCompleted { get; set; }
+        public string percentageCompletedPretty { get; set; }
+        public string prettyTimeRemaining { get; set; }
+        public string prettyTimeRemainingLong { get; set; }
+        public int averageBuildDuration { get; set; }
+        public string prettyAverageBuildDuration { get; set; }
+        public int buildTime { get; set; }
+        public string prettyBuildTime { get; set; }
+    }
+
     public class Result
     {
         public Plan Plan { get; set; }
@@ -29,7 +43,10 @@ namespace Bamboo.Sharp.Api.Model
 
         public int BuildDurationInSeconds { get; set; }
         public int BuildDuration { get; set; }
-        public string BuildDurationDescription { get; set; }
+        public string BuildDurationDescription
+        {
+            get; set;
+        }
         public string BuildRelativeTime { get; set; }
 
         public int VcsRevisionKey { get; set; }
@@ -49,7 +66,7 @@ namespace Bamboo.Sharp.Api.Model
         public bool Finished { get; set; }
         public bool Successful { get; set; }
 
-        public string BuildReason { get; set; }
+
         public string ReasonSummary { get; set; }
 
         public string ProjectName { get; set; }
@@ -61,8 +78,32 @@ namespace Bamboo.Sharp.Api.Model
         public Stages Stages { get; set; }
 
         public string Key { get; set; }
-        public string PlanResultKey { get; set; }
+        public string BuildResultKey { get; set; }
         public string BuildState { get; set; }
         public BuildState State { get; set; }
+
+        public Progress Progress { get; set; }
+
+
+        public string BuildUser { get; set; }
+
+        private string buildReason;
+        public string BuildReason
+        {
+            get
+            {
+                return buildReason;
+            }
+
+            set
+            {
+                buildReason = value;
+                //temp node created to for multiple elements appearing in the string
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                var temp = doc.CreateElement("temp");
+                temp.InnerHtml = buildReason;
+                BuildUser = temp.ChildNodes.LastOrDefault().InnerText ?? "Unknown";
+            }
+        }
     }
 }

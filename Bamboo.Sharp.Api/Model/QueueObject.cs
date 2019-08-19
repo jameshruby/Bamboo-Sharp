@@ -43,7 +43,7 @@ namespace Bamboo.Sharp.Api.Model
         //[DeserializeAs(Name = "start-index")]
         public List<QueueDBuild> queuedBuild { get; set; }
     }
-    public class RootObject
+    public class Queued
     {
         public string expand { get; set; }
         public Link link { get; set; }

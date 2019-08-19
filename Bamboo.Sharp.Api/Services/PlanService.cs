@@ -266,12 +266,16 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<Plan>(request);
         }
 
-        public FavIcon GetPlanStatusIcon(string projectKey, string buildKey)
+        public FavIcon GetPlanStatusIcon(string projectKeybuildKey)
         {
-            RestRequest request = new RestRequest { Resource = "plan/favicon/{projectKey}-{buildKey}", Method = Method.GET };
-            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
-            request.AddParameter("buildKey", buildKey, ParameterType.UrlSegment);
+            RestRequest request = new RestRequest { Resource = "plan/favicon/{projectKeybuildKey}", Method = Method.GET };
+            request.AddParameter("projectKeybuildKey", projectKeybuildKey, ParameterType.UrlSegment);
             return Client.Execute<FavIcon>(request);
+        }
+
+        public FavIcon GetPlanStatusIcon(string projectKey, string buildKey)
+        {   
+            return GetPlanStatusIcon(projectKey + "-" + buildKey);
         }
 
         public void TestTest()

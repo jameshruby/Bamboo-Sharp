@@ -31,17 +31,25 @@ namespace Bamboo.Sharp.Api.Services
 
         //Implemenations
 
-        public void GetProjectsDebug()
+        public Projects GetAllProjects()
         {
-            RestRequest request = new RestRequest { Resource = "project/{projectKey}?expand", Method = Method.GET };
-            request.AddParameter("projectKey", "AIIIDATA", ParameterType.UrlSegment);
-            Client.Execute(_baseGetProjectsRequest);
+            RestRequest request = new RestRequest { Resource = "project?expand=projects.project", RootElement = "projects", Method = Method.GET };
+            return Client.Execute<Projects>(request);
         }
 
         public Projects GetProjects()
         {
             return Client.Execute<Projects>(_baseGetProjectsRequest);
         }
+
+        public Project GetProjectWithAllPlans(string projectKey, int plansCount)
+        {
+            var request = new RestRequest { Resource = "project/{projectKey}?expand=actions&expand=plans.plan&expand=plans.plan.stages.stage.plans.plan.actions&max-result=" + plansCount, Method = Method.GET };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+
+            return Client.Execute<Project>(request);
+        }
+
 
         // with bigger size of project will increase a time
         public Project GetProjectWithAllPlans(string projectKey)
@@ -50,13 +58,9 @@ namespace Bamboo.Sharp.Api.Services
             request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
 
             int plansCount = Client.Execute<Project>(request).Plans.Size;
-
-            request = new RestRequest { Resource = "project/{projectKey}?expand=plans.plan.actions&max-result=" + plansCount, Method = Method.GET };
-            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
-
-            return Client.Execute<Project>(request);
+            return GetProjectWithAllPlans(projectKey, plansCount);
         }
-        
+
         //duplicated
         public Project GetProjectWithAllPlansAndVariables(string projectKey)
         {
@@ -82,6 +86,19 @@ namespace Bamboo.Sharp.Api.Services
             return Client.Execute<Project>(request);
         }
 
+        public Project GetProjectWithAllPlans_simple(string projectKey)
+        {
+            int plansCount = GetProject(projectKey).Plans.Size;
+            return GetProjectWithAllPlans_simple(projectKey, plansCount);
+        }
+
+        public Project GetProjectWithAllPlans_simple(string projectKey, int plansCount)
+        {
+            RestRequest request = new RestRequest { Resource = "project/{projectKey}?expand=plans.plan&max-result=" + plansCount, Method = Method.GET };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            return Client.Execute<Project>(request);
+        }
+
         public async Task<Projects> GetProjectsAsync()
         {
             return await Client.ExecuteAsync<Projects>(_baseGetProjectsRequest);
@@ -90,6 +107,13 @@ namespace Bamboo.Sharp.Api.Services
         public Project GetProject(string key)
         {
             return GetProjects().All.FirstOrDefault(p => p.Key.Equals(key));
+        }
+
+        public Project GetProject_simple(string projectKey)
+        {
+            RestRequest request = new RestRequest { Resource = "project/{projectKey}?false", Method = Method.GET };
+            request.AddParameter("projectKey", projectKey, ParameterType.UrlSegment);
+            return Client.Execute<Project>(request);
         }
 
         public async Task<Project> GetProjectAsync(string key)
